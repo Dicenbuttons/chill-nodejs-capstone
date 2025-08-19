@@ -73,6 +73,7 @@ router.post('/', upload.single('file'), async (req, res, next) => {
 // Get a single secondChanceItem by ID
 router.get('/:id', async (req, res, next) => {
     try {
+        const id = req.params.id; 
         //Step 4: task 1 - insert code here
         const db = await connectToDatabase();
         //Step 4: task 2 - insert code here
@@ -92,6 +93,7 @@ router.get('/:id', async (req, res, next) => {
 // Update an existing item
 router.put('/:id', async(req, res,next) => {
     try {
+        const id = req.params.id;
         //Step 5: task 1 - insert code here
         const db = await connectToDatabase();
         //Step 5: task 2 - insert code here
@@ -116,10 +118,10 @@ router.put('/:id', async(req, res,next) => {
             { returnDocument: 'after' }
         );
         //Step 5: task 5 - insert code here
-        if(updatepreloveItem) {
+        if(updatepreloveItem.value) {
             res.json({"uploaded":"success"});
         } else {
-            res.json({"uploaded":"failed"});
+            res.status(404).json({"uploaded":"failed"});
         }
     } catch (e) {
         next(e);
@@ -129,6 +131,7 @@ router.put('/:id', async(req, res,next) => {
 // Delete an existing item
 router.delete('/:id', async(req, res,next) => {
     try {
+        const id = req.params.id;
         //Step 6: task 1 - insert code here
         const db = await connectToDatabase();
         //Step 6: task 2 - insert code here
@@ -141,11 +144,12 @@ router.delete('/:id', async(req, res,next) => {
           return res.status(404).json({ error: "secondChanceItem not found" });
         }
         //Step 6: task 4 - insert code here
-        await collection.deleteOne({ id });
-        res.json({"deleted":"success"});
-    } catch (e) {
-        next(e);
-    }
+        const result = await collection.deleteOne({ id });
+        if(result.deletedCount === 1){
+            res.json({"deleted":"success"});
+        } else {
+            res.status(404).json({"deleted":"failed"});
+        }
 });
 
 module.exports = router;
