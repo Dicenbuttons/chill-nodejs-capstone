@@ -15,6 +15,14 @@ const port = 3060;
 // Connect to MongoDB; we just do this one time
 connectToDatabase().then(() => {
     pinoLogger.info('Connected to DB');
+    
+    // Items API Task 2: add the secondChanceItemsRoutes to the server by using the app.use() method.
+    app.use('/api/secondchance/items', secondChanceItemsRoutes);
+    // Search API Task 2: add the searchRoutes to the server by using the app.use() method.
+    app.use('/api/secondchance/search', searchRoutes);
+
+    app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
 })
     .catch((e) => console.error('Failed to connect to DB', e));
 
@@ -42,13 +50,6 @@ app.use(pinoHttp({ logger }));
 // authRoutes Step 2: add the authRoutes and to the server by using the app.use() method.
 //{{insert code here}}
 
-// Items API Task 2: add the secondChanceItemsRoutes to the server by using the app.use() method.
-app.use('/api/secondchance/items', secondChanceItemsRoutes);
-
-// Search API Task 2: add the searchRoutes to the server by using the app.use() method.
-app.use('/api/secondchance/search', searchRoutes);
-
-
 // Global Error Handler
 app.use((err, req, res, next) => {
     console.error(err);
@@ -59,6 +60,4 @@ app.get("/",(req,res)=>{
     res.send("Inside the server")
 })
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
 });
