@@ -3,21 +3,24 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const pinoLogger = require('./logger');
+const path = require('path');
 
 const connectToDatabase = require('./models/db');
 const {loadData} = require("./util/import-mongo/index");
 
-// Route files
-const secondChanceRoutes = require('./routes/secondChanceItemsRoutes');
-const searchRoutes = require('./routes/searchRoutes');
-const pinoHttp = require('pino-http');
-const logger = require('./logger');
-// authRoutes Step 2: add the authRoutes and to the server by using the app.use() method.
-//{{insert code here}}
-
 const app = express();
 app.use("*",cors());
 const port = 3060;
+
+// Route files
+const secondChanceRoutes = require('./routes/secondChanceItemsRoutes');
+const authRoutes = require('./routes/authRoutes');
+const searchRoutes = require('./routes/searchRoutes');
+const pinoHttp = require('pino-http');
+const logger = require('./logger');
+
+app.use(express.json());
+app.use(pinoHttp({ logger }));
 
 // Connect to MongoDB; we just do this one time
 connectToDatabase()
@@ -26,9 +29,8 @@ connectToDatabase()
     
     // Use Routes
     app.use('/api/secondchance/items', secondChanceItemsRoutes);
+    app.use('/api/auth', authRoutes);
     app.use('/api/secondchance/search', searchRoutes);
-    // authRoutes Step 2: add the authRoutes and to the server by using the app.use() method.
-    //{{insert code here}}  
 
     app.listen(port, () => {
         console.log(`Server running on port ${port}`);
@@ -36,8 +38,6 @@ connectToDatabase()
 })
 .catch((e) => console.error('Failed to connect to DB', e));
 
-app.use(express.json());
-app.use(pinoHttp({ logger }));
 
 // Global Error Handler
 app.use((err, req, res, next) => {
