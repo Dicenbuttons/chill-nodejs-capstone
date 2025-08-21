@@ -13,7 +13,7 @@ app.use("*",cors());
 const port = 3060;
 
 // Route files
-const secondChanceRoutes = require('./routes/secondChanceItemsRoutes');
+const secondChanceRoutes = require('./routes/secondChanceRoutes');
 const authRoutes = require('./routes/authRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 const pinoHttp = require('pino-http');
@@ -28,7 +28,7 @@ connectToDatabase()
     pinoLogger.info('Connected to DB');
     
     // Use Routes
-    app.use('/api/secondchance/items', secondChanceItemsRoutes);
+    app.use('/api/secondchance/items', secondChanceRoutes);
     app.use('/api/auth', authRoutes);
     app.use('/api/secondchance/search', searchRoutes);
 
