@@ -14,7 +14,7 @@ connectToDatabase().then(() => {
   .catch((e) => console.error('Failed to connect to DB', e))
 app.use(express.json())
 // Route files
-const secondChanceRoutes = require('./routes/secondChanceItemsRoutes')
+const secondChanceRoutes = require('./routes/secondChanceRoutes')
 const authRoutes = require('./routes/authRoutes')
 const searchRoutes = require('./routes/searchRoutes')
 const pinoHttp = require('pino-http')
