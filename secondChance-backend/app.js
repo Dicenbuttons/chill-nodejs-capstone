@@ -33,4 +33,18 @@ app.use(express.static(path.join(__dirname, 'public')))
 // Use Routes
 app.use('/api/secondchance/items', secondChanceRoutes)
 app.use('/api/auth', authRoutes)
-app.use('/api/secondchance/search', s
+app.use('/api/secondchance/search', searchRoutes)
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err)
+  res.status(500).send('Internal Server Error')
+})
+
+app.get('/', (req, res) => {
+  res.send('Inside the server')
+})
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`)
+})
